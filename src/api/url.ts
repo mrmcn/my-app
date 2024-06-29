@@ -1,0 +1,15 @@
+export const url = {
+  baseURL: 'https://dummyjson.com',
+  accData: '/user/me',
+  accAdd: '/users/add',
+  accAction: '/users/',
+  login: '/auth/login',
+  authRefresh: '/auth/refresh',
+  categories: '/products/category-list',
+  product: '/products/',
+  categoryProducts: '/products/category/',
+  brands: '/products',
+  search: '/products/search',
+  sendOrder: '/carts/add',
+  getOrders: '/carts/user/',
+}
