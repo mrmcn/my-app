@@ -10,6 +10,5 @@ export default function useRouteMatch(patterns: (string | undefined)[]) {
       return possibleMatch
     }
   }
-
   return null
 }

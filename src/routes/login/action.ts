@@ -14,7 +14,7 @@ export const loginAction = (async ({ request }) => {
     queryFn: (): Promise<Person> => instance.post(url.login, formData),
   })
   auth.setUserId(response.id)
-  auth.setTokens(response.token, response.refreshToken)
+  auth.setTokens({ token: response.token, refreshToken: response.refreshToken })
 
   return redirect(redirectTo || '/')
 }) satisfies ActionFunction

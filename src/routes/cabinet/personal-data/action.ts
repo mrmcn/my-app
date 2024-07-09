@@ -5,9 +5,9 @@ import { url } from '../../../api/url'
 import { queryClient } from '../../../query-client'
 import { auth } from '../../../services'
 import { queryKey } from '../../../services/const'
-import { ActionProps, Person } from '../../../services/interface'
+import { Person } from '../../../services/interface'
 
-export const personalDataAction = (async ({ request }: ActionProps) => {
+export const personalDataAction = (async ({ request }) => {
   const formData = await request.formData()
 
   if (request.method === 'DELETE') {

@@ -87,25 +87,24 @@ const fakeFilter = (params: URLSearchParams, data: Product[]) => {
   }
 }
 
-const extractData = (formData: any) => {
-  const arr: string[][] = Array.from(formData.entries())
-  const data: ExtractDataProps = arr
-    .map((vas) => {
-      const keyName = vas[0].split('.')
+const extractData = (formData: FormData) => {
+  const data = Object.entries(formData)
+    .map(([key, value]) => {
+      const keyName = key.split('.')
       if (keyName.length === 1) {
-        return vas
+        return [key, value]
       } else {
-        return [keyName[0], { [keyName[1]]: vas[1] }]
+        return [keyName[0], { [keyName[1]]: value }]
       }
     })
-    .reduce((acc: any, curr: any) => {
-      if (acc[curr[0]] === undefined) {
-        return { ...acc, [curr[0]]: curr[1] }
+    .reduce((acc: any, [key, value]: any) => {
+      if (acc[key] === undefined) {
+        return { ...acc, [key]: value }
       } else {
-        return { ...acc, [curr[0]]: { ...acc[curr[0]], ...curr[1] } }
+        return { ...acc, [key]: { ...acc[key], ...value } }
       }
     }, {})
-  return data
+  return data as ExtractDataProps
 }
 
 export { fakeFilter, products, extractData }
@@ -136,6 +135,6 @@ const ba = (a: Product, b: Product) => {
 const minMax = (a: Product, b: Product) => a.price - b.price
 const maxMin = (a: Product, b: Product) => b.price - a.price
 
-interface ExtractDataProps {
-  [x: string]: string | { [x: string]: { [x: string]: string } }
-}
+type ExtractDataProps =
+  | { [x: string]: string }
+  | { [x: string]: { [x: string]: string } }

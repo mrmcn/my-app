@@ -17,7 +17,9 @@ const userCart = {
   },
   removeCart: () => localStorage.removeItem('cart'),
   deleteProduct: (formData: FormData) => {
-    const { itemId } = Object.fromEntries(formData)
+    const { itemId } = Object.fromEntries(formData) as {
+      [k: string]: string
+    }
     const cart = userCart.cart()
     const products = cart!.products.filter(
       (product) => product.id !== Number(itemId),
@@ -26,7 +28,9 @@ const userCart = {
     return null
   },
   editQuantity: (formData: FormData) => {
-    const { quantity, itemId } = Object.fromEntries(formData)
+    const { quantity, itemId } = Object.fromEntries(formData) as {
+      [k: string]: string
+    }
     const cart = userCart.cart()
     const products = cart!.products.map((product) =>
       product.id === Number(itemId)
@@ -78,9 +82,8 @@ const auth = {
       : JSON.parse(localStorage.getItem('tokens')!),
   setUserId: (value: number) =>
     localStorage.setItem('userId', JSON.stringify(value)),
-  setTokens: (token: string, refreshToken: string) => {
-    localStorage.setItem('tokens', JSON.stringify({ token, refreshToken }))
-  },
+  setTokens: (tokens: Tokens) =>
+    localStorage.setItem('tokens', JSON.stringify(tokens)),
   removeUserData: () => {
     localStorage.removeItem('userId')
     localStorage.removeItem('tokens')
@@ -98,16 +101,15 @@ const auth = {
       return null
     }
   },
-  refresh: () => {
-    queryClient.fetchQuery(authRefreshOptions())
-  },
+  refresh: async () =>
+    auth.setTokens(await queryClient.fetchQuery(authRefreshOptions())),
 }
 
 function authRefreshOptions() {
   const tokens = auth.tokens()
   return queryOptions({
     queryKey: [queryKey.authRefresh],
-    queryFn: (): Promise<{ token: string; refreshToken: string }> =>
+    queryFn: (): Promise<Tokens> =>
       instance.post(url.authRefresh, {
         refreshToken: tokens!.refreshToken,
         expiresInMins: 90,

@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { nanoid } from 'nanoid'
 import { useFetcher, useLoaderData } from 'react-router-dom'
+import { auth } from '../../../../services'
 import { MyCartProps } from '../../../../services/interface'
 import Item from '../item'
 
@@ -46,9 +47,12 @@ export default function CurrentOrder() {
         method='post'
       >
         <Button
-          value={JSON.stringify(cart.products)}
+          value={JSON.stringify({
+            userId: auth.userId(),
+            products: cart.products,
+          })}
           type='submit'
-          name='products'
+          name='sendOrder'
           variant='contained'
           color='success'
           fullWidth

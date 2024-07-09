@@ -13,5 +13,5 @@ export const allAboutLoader = (({ params }) => {
         instance(url.product, { params: params }),
       staleTime: 60 * 60 * 1000,
     }),
-  })
+  }) as unknown as { product: Promise<Product> }
 }) satisfies LoaderFunction

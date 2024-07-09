@@ -12,7 +12,7 @@ export const layoutLoader = (async ({ request }) => {
   const { search } = Object.fromEntries(url.searchParams)
 
   return {
-    categories: queryClient.fetchQuery(
+    categories: await queryClient.fetchQuery(
       queryOptions({
         queryKey: [queryKey.categories],
         queryFn: (): Promise<string[]> => instance(urlAPI.categories),

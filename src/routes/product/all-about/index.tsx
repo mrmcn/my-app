@@ -2,14 +2,15 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { Suspense } from 'react'
 import { Await, useLoaderData } from 'react-router-dom'
-import { Product } from '../../../services/interface'
+import { LoaderData } from '../../../services/interface'
 import Description from './components/description'
 import InfoCards from './components/info-card'
 import NavPhotoPanel from './components/nav-photo'
 import Fallback from './fallback'
+import { allAboutLoader } from './loader'
 
 export default function AllAbout() {
-  const data = useLoaderData() as { product: Promise<Product> }
+  const data = useLoaderData() as LoaderData<typeof allAboutLoader>
 
   return (
     <Box sx={{ mt: 1 }}>

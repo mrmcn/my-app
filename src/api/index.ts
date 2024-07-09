@@ -18,10 +18,7 @@ instance.interceptors.request.use((config) => {
       config.data = Object.fromEntries(config.data)
       break
     case url.sendOrder:
-      config.data = {
-        userId: auth.userId(),
-        products: JSON.parse(Object.fromEntries(config.data).products),
-      }
+      config.data = JSON.parse(Object.fromEntries(config.data).sendOrder)
       break
     case url.search:
       const { search } = Object.fromEntries(config.params)
@@ -56,38 +53,26 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(
   (response) => {
-    if (!response.data) {
-      return { error: response.status }
-    }
-
     switch (response.config.url) {
-      case url.authRefresh:
-        auth.setTokens(response.data.token, response.data.refreshToken)
-        response.data = auth.tokens()
-        break
       case url.accData:
-        response.data =
-          response.config.method === 'put'
-            ? queryClient.getQueryData([queryKey.account])
-            : response.data
+        if (response.config.method === 'put')
+          response.data = queryClient.getQueryData([queryKey.account])
         break
       case url.search:
-        const data = response.data.products
-        response.data = data
+        response.data = response.data.products
         break
       default:
     }
 
-    if (response.config.url?.includes(url.categoryProducts)) {
-      return fakeFilter(response.config.params, response.data.products)
-    }
+    if (response.config.url?.includes(url.categoryProducts))
+      response.data = fakeFilter(response.config.params, response.data.products)
 
     return response.data
   },
   (error) => {
     console.log('THIS IS ERROR!!!!!!!!', error)
-    // if (response.status === 401) auth.removeUserData()
-    // return null
-    // return Promise.reject(error)
+    throw new Response(error, {
+      status: error.status,
+    })
   },
 )
